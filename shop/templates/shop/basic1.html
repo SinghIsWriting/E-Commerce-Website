@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>{% block title%} {% endblock %}</title>
+    <style>
+       {% block css %} {% endblock %}
+        #search{
+          margin-right: 2%;
+          padding:15px;
+          border-radius: 20px;
+        }
+            input[type=text]:focus {
+          width: 70%;
+        }
+        .navbar{
+          display: flex;
+          justify-content: center;
+        }
+        .navbar>.container{
+          display: flex;
+          /* flex-wrap: inherit; */
+          /* align-items: center; */
+          justify-content: space-between;
+        }
+        .navbar>.container, .navbar>.container-fluid {
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+          -ms-flex-align: center;
+          /* align-items: center; */
+          -ms-flex-pack: justify;
+          justify-content: space-between;
+        }
+        .cart-menu{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+        }
+        .navbar-brand{
+          font-size: 1.5rem;
+          font-weight: 500;
+        }
+  </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container container-fluid mx-2">
+      <a class="navbar-brand" href="/shop">Favorite Items</a>
+      {% if request.user.is_authenticated %}
+
+      <div class="cart-menu">
+        <button type="button" id="popcart" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+        Cart (<span id="cart">0</span>)
+        {% else %}
+        <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right"data-html="true" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+        Cart (0)
+        {% endif%}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% if request.path == '/shop/' %}active{% endif %}">
+              <a class="nav-link" href="/shop"><i class="fa fa-fw fa-home"></i> Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Your Orders
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'Orders' %}"> Your Orders</a>
+                <a class="dropdown-item" href="/shop/singletracker">Track Quick Orders</a>
+                <a class="dropdown-item" href="/shop/tracker">Track Cart Orders</a>
+              </div>
+            </li>
+            <li class="nav-item {% if request.path == '/shop/about/' %}active{% endif %}">
+              <a class="nav-link" href="/shop/about"><i class="fa fa-fw fa-globe"></i> About Us</a>
+            </li>
+            <li class="nav-item {% if request.path == '/shop/contact/' %}active{% endif %}">
+              <a class="nav-link" href="/shop/contact"><i class="fa fa-fw fa-envelope"></i> Contact Us</a>
+            </li>
+            <li class="nav-item {% if request.path == '/blog/' %}active{% endif %}">
+              <a class="nav-link" href="/blog"><i class="fa fa-fw fa-comment"></i> Blogs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'profile' %}"><i class="fa fa-fw fa-user"></i> Account</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+</div>
+</nav>
+
+  {% block body %} {% endblock %}
+
+<!-- Start Footer -->
+<div class="container-fluid bg-dark text-center p-2 mt-5" style="
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;">
+    <small class="text-white">Copyright &copy; 2023 || Designed By FavoriteItems || </small>
+    {% comment %} <img src="{% static 'images/hr_payment_icons.png' %}" alt="" srcset="" class="img-fluid" height="2px"> {% endcomment %}
+</div> <!-- End Footer -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script>
+    $('#popcart').popover();
+    </script>
+    {% block js %} {% endblock %}
+  </body>
+</html>

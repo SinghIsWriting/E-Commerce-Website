@@ -1,0 +1,29 @@
+{% extends 'shop/basic1.2.html' %}
+{% block title%} Order Placed!{% endblock %}
+{% block body %}
+
+<div class="container my-5">
+<div class="row my-3">
+<div class="col-sm-2 offset-sm-3 text-center">
+  <p class="alert alert-success"><b>Your order has been placed successfully!</b> Thanks for making purchase with us. Your order id is <b>{{id}}</b>. See your order status using it.</p>
+  <div>
+   <iframe src="https://giphy.com/embed/ibolLe3mOqHE3PQTtk" width="200" height="200" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+  </div>
+ </div>
+  <div class="col-sm-2 border-end">
+   <ul class="list-unstyled">
+    <li class="d-grid"><a {% if thanks %} href="{% url 'CartOrders' %}" {% else %} href="{% url 'Orders' %}" {% endif %} class="btn btn-warning" style="background-color:orange; color:white;">Your Orders</a></li>
+   </ul>
+  </div>
+</div>
+</div>
+
+{% endblock body %}
+
+{% block js %}
+<script>
+{% if thanks %}
+localStorage.clear();
+{% endif %}
+</script>
+{% endblock js %}

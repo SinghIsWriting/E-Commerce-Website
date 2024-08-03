@@ -1,0 +1,126 @@
+{% extends 'shop/basic1.2.html' %}
+
+{% block title%} Track Favorite Items{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col my-4">
+        <h3><b>Enter your Order Id and Email address to track a quick order</b></h3>
+        <form method="post" action="#" id="trackerForm">{% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputname">Order Id</label>
+                    <input type="text" class="form-control" id="orderId1" name="orderId1" placeholder="Order Id">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+                <button type="submit" style="color:white;" class="btn btn-dark">Track Order</button>
+            </div>
+         </form>
+    </div>
+    <div class="col my-4">
+        <h4><b>Your Order Status</b></h4>
+        <div class="my-4">
+            <ul class="list-group" id="items">
+            	<p class="alert alert-info">Enter your order Id and Email to get your order status!</p>
+            </ul>
+        </div>
+        <h4><b>Your Order details</b></h4>
+        <div class="my-4">
+            <ul class="list-group" id="citems">
+                <p class="alert alert-info">Enter your order Id and Email to see your orders details!</p>
+            </ul>
+        </div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Subtotal ₹<b><span id="totalPrice">0</span></b></li>
+          </ol>
+        </nav>
+        <div class="d-grid gap-2 col-6 mx-auto">
+           <a href="{% url 'Orders' %}"><button type="submit" style="color:white; background-color:orange;" class="btn">Your Orders</button></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+$('#trackerForm').submit(function(event) {
+    $('#items').empty();
+    var formData = {
+        'orderId1': $('input[name=orderId1]').val(),
+        'email': $('input[name=email]').val(),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/shop/singletracker/',
+            data: formData,
+            encode: true
+        })
+        .done(function(data) {
+            $('#citems').empty();
+            console.log(data)
+            data = JSON.parse(data);
+            //alert(data['itemsJson']);
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            if (data['status'] == 'success') {
+                updates = data['updates'];
+                //alert(data['updates']);
+                for (i = 0; i < updates.length; i++) {
+                    let text = updates[i]['text'];
+                    let time = updates[i]['time'];
+                    const d = new Date(time);
+                    let day = days[d.getDay()];
+                    let month = months[d.getMonth()];
+                    let date = d.getDate();
+                    let year = d.getFullYear();
+                    tcolor = String(text).split(" ");
+                    //alert(tcolor);
+                    if (tcolor.includes("placed") || tcolor.includes("accepted")){
+                        var col = "#2389da";
+                    } else if (tcolor.includes("shipped") || tcolor.includes("packed")){
+                        var col = "#FFD700";
+                    } else if (tcolor.includes("dispatched") || tcolor.includes("sent")){
+                        var col = "#FF8C00";
+                    } else if (tcolor.includes("delivered") || tcolor.includes("arrived")){
+                        var col = "#00d27f";
+                    } else {
+                        var col = "black";
+                    }
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${text}
+                    <span style="background-color:${col};" class="badge badge-dark">${day} ${month} ${date} ${year}</span>
+                </li>`
+                    $('#items').append(mystr);
+                }
+                cart = data['itemsJson'];
+                //alert(cart);
+                totalPrice = 0
+                for (item in cart) {
+                    let name = cart[0]['pname'];
+                    let price = cart[0]['pprice'];
+                    let qty = cart[0]['quant'];
+                    totalPrice = totalPrice + qty * price;
+                    mystr = `        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                  ${name}
+                                 <span class="badge badge-dark">₹${price} Quant - ${qty}</span>
+                                 </li>`
+                $('#citems').append(mystr);
+            }
+            document.getElementById('totalPrice').innerHTML = totalPrice;
+            } else {
+            	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    <p class="alert alert-danger">Sorry, We can't fetch this order id and email. Make sure to type correct order Id and email.</p></li>`
+            	$('#items').append(mystr);
+                $('#citems').append(mystr);
+            }         
+
+
+        });
+    event.preventDefault();
+});
+</script>
+{% endblock %}
+

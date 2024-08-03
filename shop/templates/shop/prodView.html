@@ -1,0 +1,147 @@
+{% extends 'shop/basic1.2.html' %}
+
+{% block title%} {{product.product_name}} - Favorite Item{% endblock %}
+{% block body %}
+<div class="container my-1">
+    <div class="row mt-10" style="justify-content: center; margin-top: 15px;">
+    <div class="col-md-4">
+      <div><span id="alertbox"></span></div>
+      <form {% if not thank %} method="post" action="/shop/singleCart/" {% endif %}>{% csrf_token %}
+         <div class="card mb-4" style="width: 100%;">
+             <img src="/media/{{product.image}}" width="auto" height="auto" alt="product_image" style="border-top-left-radius: 5px;  border-top-right-radius: 5px;">
+           <div style="
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;
+            ">
+             <h5 id="pname" name="pname" style="font-size: 2.3rem;font-weight: 700;">Delta</h5>
+             <p style="color:grey;font-size: 1.3rem;font-weight: 500;">One of the best movies</p>
+             <h5 id="pprice" name="pprice" style="font-size: 1.8rem;margin-top:-12px;color: grey;font-weight: 500;">₹<b>100</b></h5>
+           </div>
+         </div>         
+    </div>
+          
+
+    <div class="col-sm-4 offset-sm-1 mt-2">
+        <h4><b>Enter the details below to place order</b></h4>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+               <label for="inputname">Quantity of {{product.product_name}}</label>
+               <input type="number" class="form-control" id="quant" name="quant" placeholder="Quantity">
+            </div>
+            <div class="form-group col-md-4">
+               <label for="inputEmail4">Phone Number</label>
+               <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone No.">
+           </div>
+        </div>
+        <hr>
+        <h4><b>Choose Shipping Address</b></h4>
+        {% if add %}
+        {% for ad in add %}
+        <div class="card">
+            <div class="card-body text-center">
+            <h5 style='font-size:16px;'><b>{{ad.name}}</b></h5>
+            <p style='font-size:15px; color:grey;'>{{ad.locality}}, {{ad.city}}, {{ad.state}} - {{ad.zipcode}}</p>
+            </div>
+        </div>
+        <div class="form-check mt-2 mb-4">
+            <input type="radio" class="form-check-input" name="custid" id="custadd{{forloop.counter}}" value="{{ad.id}}">
+            <label class="form-check-label fw-bold babloo" for="custadd{{forloop.counter}}">Address: {{forloop.counter}}</label>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="alert alert-warning">No adresses! You have not set up your profile yet. Please do that before placing order. Visit your <a style="color:#7f6600;" href="{% url 'profile' %}">Profile</a></p>
+        {% endif %}
+
+        <div class="d-grid gap-2 col-8 mx-auto mt-2 mb-4">
+            <button type="submit" style="background-color:orange; color:white;" class="porder btn" id="{{product.id}}">Place Order</button>
+        </div>
+    </div> 
+    </form>
+
+</div>
+   <dialog id="favDialog">
+      <form method="dialog">
+        <p class="alert alert-success">
+          <label>
+              Thanks for making a purchase with us. Your order id is <span id="alertId"></span>. Use it to track your order, please go to [Track one] page to track single item orders.
+           </label>
+        </p>
+      <div>
+         <button class="btn btn-primary" value="cancel">Ok</button>
+      </div>
+      </form>
+   </dialog>
+</div>
+</div>
+
+
+{% endblock %}
+
+
+
+{% block js %}
+<script>
+
+$('.porder').click(function(){
+   var pid = $(this).attr("id").toString();
+   //prompt(pid);
+   $.ajax({
+       type:"GET",
+       url:"/shop/singleCart",
+       data:{
+           prod_id: pid
+       },
+       success: function(data){
+           console.log(data)
+       }
+   });
+/*
+$('.babloo').click(function(){
+   var custid = $(this).attr("value").toString();
+   $.ajax({
+       type:"GET",
+       url:"/shop/singleCart",
+       data:{
+           cust_id: custid
+       },
+       success: function(data){
+          console.log(data)
+       }
+   });
+*/
+   {% if thank %}
+   var a1 = "/shop/productview/";
+   a1 += pid;
+   prompt(a1);
+   document.location=a1;
+   {% endif %}
+});
+
+{% if thanks %}
+//alert("Thanks for making a purchase with us. Your order id is {{id}}. Use it to track your order, please go to Tracker page")
+
+//function boxer(){
+//   $('#favDialog').fadeIn(5000);
+//}
+
+function showtime(){
+document.getElementById('alertId').innerHTML = {{id}};
+const favDialog = document.getElementById('favDialog');
+favDialog.showModal();
+}
+showtime();
+function gto(){
+   document.location="/shop/productview/{{pid}}";
+}
+setTimeout(gto, 1000);
+{%endif%}
+
+
+</script>
+{% endblock %}
+
+

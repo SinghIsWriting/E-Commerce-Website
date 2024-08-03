@@ -1,0 +1,34 @@
+{% extends 'basic.html' %}
+{% block title%} Login {% endblock %}
+{% block body %}
+
+<div class="container">
+<div class="row my-3">
+<div class="col-sm-6 offset-sm-3">
+<h4 class="alert alert text-center" style="background-color:#333333; color:white;">Log In</h4>
+<form action='' method='POST' novalidate class="shadow p-4"> {% csrf_token %}
+ {% if messages %}
+  {% for msg in messages %}
+   <p {% if msg.tags %} class="alert alert-{{msg.tags}} mb-5" {% endif %}>{{msg}}</p>
+  {% endfor %}
+ {% endif %}
+ {% for fm in form %}
+  <div class="form-group">
+  {{fm.label_tag}} {{fm}} <small class='text-danger'>{{fm.errors|striptags}}</small>
+  </div>
+ {% endfor %}
+ <small><a href='{% url "password_reset" %}' class="text-danger">Forgot Password?</a></small><br>
+  <input type="submit" class="btn btn-dark mt-4" value="Log in"><br><br>
+ <div class="text-center text-primary fw-bold"><small style="color:grey;">New to FavoriteItems? 
+   <a href='{% url "customerregistration" %}' class="text-dark"> Sign Up</a></small></div>
+ {% if form.non_field_errors %}
+   {% for error in form.non_field_errors %}
+    <p class="alert alert-danger my-3">{{error}}</p>
+   {% endfor %}
+ {% endif %}
+ <!-- <a href='' class="btn btn-info">Back</a>-->
+</form>
+</div>
+</div>
+</div>
+{% endblock body %}

@@ -1,0 +1,23 @@
+{% extends 'shop/basic1.2.html' %}
+{% load static %}
+{% block title %} Error! Incomplete Details for Placing the order{% endblock title %}
+{% block body %}
+<div class="container my-3">
+ <div class="row">
+ <p class="fw-bold"><h4><b>Warning!</b> Invalid Details for Placing the order.</h4></p>
+  </div>
+    <div class="text-center"><img src='/static/shop/incomplete.png' alt='' srcset='' class='img-fluid' height='2px'></div>
+    <div class="card text-center my-3" style="background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+     <div class="card-body mt-10">
+      <p class="text-center" style="size:auto; color:red; text-size:25px">All options are required! Please fill the details properly and correctly.</p>
+     </div>
+    </div>
+</div>
+{% endblock body %}
+
+
+{% block js %}
+<script>
+
+</script>
+{% endblock %}

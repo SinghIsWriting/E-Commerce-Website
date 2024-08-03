@@ -1,0 +1,79 @@
+{% extends 'shop/basic1.2.html' %}
+{% load static %}
+{% block title %} Cart Orders{% endblock title %}
+{% block body %}
+<div class="container my-3">
+ <div class="row">
+ <h3><b>Your Orders</b></h3>
+  <div class="col-sm-2 border-end">
+   <ul class="list-unstyled">
+     <li class="d-grid"><a href="{% url 'Orders' %}" class="btn btn-secondary my-2">Quick Orders</a></li>
+     <li class="d-grid"><a href="{% url 'CartOrders' %}" class="btn {{active}}">Cart Orders</a></li>
+   </ul>
+   <hr>
+  </div>
+  <div class="col-sm-9 offset-sm-1">
+   {% if request.user.is_authenticated %}
+   <div class="row">
+   <h4 class="mb-3" style="font-size:18px; color:grey;">Your Total Orders: <b>{{orders|length}}</b></h4>
+   {% if orders %}
+   {% for items in orders %}
+   <div class="col-sm-6 mb-2">
+    <div class="card" style="box-shadow: 0 0px 4px 0 {{items.stCol}}, 0 0px 10px 0 {{items.stCol}};">
+     <div class="card-body">
+      <p style="font-size:14px;">
+       {% for item,list in items.itemsJson.items %}
+         <b>{{list.1|striptags}}</b> (₹{{list.2}}) x {{list.0}}<br>
+       {% endfor %}
+      </p>
+      <p style="font-size:14px;">
+       <b>Order Id:</b> {{items.id}} , <b>Email:</b> {{items.email}}<br>
+       <b>Order total:</b> ₹{{items.amount}}<br>
+       <b>Order date:</b> {{items.timestamp}}</p>
+     </div>
+    </div>
+    </div>
+   {% endfor %}
+   {% else %}
+   <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+     <div class="carousel-item active">
+      <img src='/static/shop/nothing.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+     </div>
+    <div class="carousel-item">
+      <img src='/static/shop/emptybag.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+     </div>
+    </div>
+   </div>
+   {% endif %}
+   </div>
+   {% else %}
+    <p class="alert alert-warning">Login is required to see orders here! Please <a style="color:#7f6600;" href="{% url 'login' %}">Login</a>.</p>
+   <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+       <img src='/static/shop/nothing.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+      </div>
+      <div class="carousel-item">
+       <img src='/static/shop/emptybag.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+      </div>
+    </div>
+   </div>
+   {% endif %}
+  </div>
+ </div>
+</div>
+{% endblock body %}
+
+
+{% block js %}
+<script>
+
+var op = document.getElementById("op").value;
+var qu = document.getElementById("qu").value;
+alert(op)
+let price = qu * op;
+alert(price)
+
+</script>
+{% endblock %}

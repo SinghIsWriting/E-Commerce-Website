@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>{% block title %} {% endblock %}</title>
+
+    <style>
+    .navbar-brand{
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+  
+    </style>
+
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+    <a class="navbar-brand active" {% if user.is_authenticated %} href="/" {% endif %}><i class="fa fa-fw fa-home"></i> Favorite Items</a>
+    {% if user.is_authenticated %}
+    <div>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+           <li class="nav-item dropdown mx-2">
+              <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-fw fa-user"></i> Account
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fa fa-fw fa-user"></i> {{request.user|capfirst}}</a></li>
+                <li><a class="dropdown-item" href="/shop"><i class="fa fa-fw fa-money"></i> Shop</a></li>
+                <li><a class="dropdown-item" href="{% url 'passwordchange' %}"><i class="fa fa-fw fa-key"></i> Change Password</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
+              </ul>
+            </li>
+           </ul>
+     </div>
+    {% endif %}
+    </div>
+    </nav>
+  </head>
+  <body>
+    {% block body %}
+    {% endblock %}
+
+    <!-- Start Footer -->
+    <footer class="container-fluid bg-dark text-center p-2 mt-5">
+        <small class="text-white">Copyright &copy; 2023 || Designed By FavoriteItems || </small>
+        {% comment %} <img src="{% static 'images/hr_payment_icons.png' %}" alt="" srcset="" class="img-fluid" height="2px"> {% endcomment %}
+    </footer> <!-- End Footer -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>-->
+
+  </body>
+</html>

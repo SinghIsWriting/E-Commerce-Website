@@ -1,0 +1,100 @@
+{% extends 'shop/basic1.2.html' %}
+
+{% block title%} Contact Us - Favorite Items{% endblock %}
+
+{% block body %}
+<div class="container my-2">
+    <h3>Contact Us</h3>
+     {% if thanks %}
+     <p class="{{thanks}}">Failed! Please fill all options and then submit.</p>
+     {% elif thank %}
+     <p class="{{thank}}">Thanks for contacting us, We will back to you soon.</p>
+     {% endif %}
+    <form action="/shop/contact/" method="post">{% csrf_token %}
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name='name' placeholder="Enter Your Name">
+  </div>
+  <div class="form-group">
+    <label for="name">Email</label>
+    <input type="email" class="form-control" id="email" name='email' placeholder="Enter Your Email">
+  </div>
+
+    <div class="form-group">
+    <label for="name">Phone</label>
+    <input type="tel" class="form-control" id="phone" name='phone' placeholder="Enter Your Phone Number">
+  </div>
+
+
+   <div class="form-group">
+    <label for="desc">Description of your query</label>
+    <textarea class="form-control" id="desc" name='desc' rows="4"></textarea>
+  </div>
+        <button type="submit" class="btn btn-dark">Submit</button>
+
+        <script src="/static/shop/main.js"></script>
+        <script>
+             function callAlert(msg){
+                  alert(msg, 10000)
+             }
+        </script>
+</form>
+
+<dialog id="favDialog">
+      <form method="dialog">
+        <p>
+          <label>
+              Thanks for contacting us, We will back to you soon!
+           </label>
+        </p>
+      <div>
+         <button value="cancel">Ok</button>
+      </div>
+      </form>
+   </dialog>
+
+
+</div>
+{% endblock %}
+
+
+
+{% block js %}
+<script>
+
+{% if thank %}
+function showtime(){
+a = 28282
+}
+setTimeout(showtime, 5000);
+localStorage.clear();
+document.location="/shop/contact";
+{% endif %}
+/*
+if(localStorage.getItem('cart') == null){
+var cart = {};
+}
+else
+{
+cart = JSON.parse(localStorage.getItem('cart'));
+document.getElementById('cart').innerHTML = Object.keys(cart).length;
+}
+$('.cart').click(function(){
+console.log('clicked');
+var idstr = this.id.toString();
+console.log(idstr);
+if (cart[idstr] !=undefined){
+cart[idstr] = cart[idstr] + 1;
+}
+else
+{
+cart[idstr] = 1;
+}
+console.log(cart);
+localStorage.setItem('cart', JSON.stringify(cart));
+document.getElementById('cart').innerHTML = Object.keys(cart).length;
+});
+*/
+
+</script>
+{% endblock %}

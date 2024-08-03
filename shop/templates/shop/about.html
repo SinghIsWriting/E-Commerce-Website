@@ -1,0 +1,87 @@
+{% extends 'shop/basic1.2.html' %}
+
+{% block title%} About Us{% endblock %}
+{% block body %}
+
+
+<main role="main">
+
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3"> Favorite Items!</h1>
+      <p>Favorite Items Pvt Ltd. is an Indian electronic commerce company based in Bangarmau Unnao, Utter Pradesh, India. Founded by Abhishek Singh in 2022, the company initially focused on book sales, before expanding into other product categories such as consumer electronics, fashion, and lifestyle products.
+
+The service competes primarily with Amazon' s Indian subsidiary, and the domestic rival Snapdeal as of December 2022, Favorite Items held a 00.0% market share of India's e-commerce industry. Favorite Items is significantly dominant in the sale of apparel (a position that was bolstered by its acquisitions of Myntra and Jabong.com), and was described as being "neck and neck" with Amazon in the sale of electronics and mobile phones. Favorite Items also owns PhonePe, a mobile payments service based on the Unified Payments Interface (UPI).</p>
+      <p><a class="btn btn-dark btn-lg" href="/blog" role="button">« Go to Blog</a>
+      <a class="btn btn-dark btn-lg" href="/shop" role="button">Shop Now »</a></p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Services</h2>
+        <p>We sell electronics, fashion and lifestyle products , and we offer free shipping on all orders over Rs.50000.
+
+We would be grateful if you would visit the website and let us know what you think. If you have any questions or concerns, please feel free to contact us. For contacting us, please go to contact page of this website and write to us. We will get you soon. </p>
+        <p><a class="btn btn-secondary" href="/shop/contact" role="button">Contact Us »</a></p>
+      </div>
+<!--      <div class="col-md-4">
+        <h2>Heading</h2>
+        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+      </div>
+      <div class="col-md-4">
+        <h2>Heading</h2>
+        <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+        <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+      </div>-->
+    </div>
+
+    <hr>
+
+  </div> <!-- /container -->
+
+</main>
+
+
+
+{% endblock %}
+
+
+
+
+{% block js %}
+<script>
+//localStorage.clear()
+
+console.log('working');
+if(localStorage.getItem('cart') == null){
+var cart = {};
+}
+else
+{
+cart = JSON.parse(localStorage.getItem('cart'));
+document.getElementById('cart').innerHTML = Object.keys(cart).length;
+}
+$('.cart').click(function(){
+console.log('clicked');
+var idstr = this.id.toString();
+console.log(idstr);
+if (cart[idstr] !=undefined){
+cart[idstr] = cart[idstr] + 1;
+}
+else
+{
+cart[idstr] = 1;
+}
+console.log(cart);
+localStorage.setItem('cart', JSON.stringify(cart));
+document.getElementById('cart').innerHTML = Object.keys(cart).length;
+});
+$('#popcart').popover();
+document.getElementById("popcart").setAttribute('data-content', '<h6>Cart for your favorite items</h6>');
+</script>
+{% endblock %}

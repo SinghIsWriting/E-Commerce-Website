@@ -1,0 +1,73 @@
+{% extends 'shop/basic1.2.html' %}
+{% load static %}
+{% block title %} Orders{% endblock title %}
+{% block body %}
+<div class="container my-3">
+ <div class="row">
+ {% if id %}
+  <div><p class="alert alert-success">Thanks for making a purchase with us. Your order id is {{id}}. Use it to track your order, please go to Tracker page</p></div>
+ {% endif %}
+ <h3><b>Your Orders</b></h3>
+  <div class="col-sm-2 border-end">
+   <ul class="list-unstyled">
+     <li class="d-grid"><a href="{% url 'Orders' %}" class="btn {{active}} my-2">Quick Orders</a></li>
+     <li class="d-grid"><a href="{% url 'CartOrders' %}" class="btn btn-secondary">Cart Orders</a></li>
+   </ul>
+  <hr>
+  </div>
+  <div class="col-sm-9 offset-sm-1">
+   {% if request.user.is_authenticated %}
+   <div class="row">
+   <h4 class="mb-3" style="font-size:18px; color:grey;">Your Total Orders: <b>{{orders|length}}</b></h4>
+   {% if orders %}
+   {% for ord in orders %}
+   <div class="col-sm-6 mb-2">
+<!--    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">-->
+    <div class="card" style="box-shadow: 0 0px 4px 0 {{ord.stCol}}, 0 0px 10px 0 {{ord.stCol}};">
+     <div class="card-body">
+      <p style="font-size:14px; "><b>{{ord.ords.pname}}</b> (<em>₹{{ord.ords.pprice}}</em>)<br>
+      <b>Quantity:</b> {{ord.ords.quant|floatformat}}<br>
+      <b>Order Id:</b> {{ord.ords.order_id1}} , <b>Email:</b> {{ord.ords.email}}<br>
+      <b>Order total:</b> ₹{{ord.ords.total_cost}}<br>
+      <b>Order date:</b> {{ord.ords.timestamp}}</p>
+     </div>
+    </div>
+    </div>
+   {% endfor %}
+   {% else %}
+   <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+       <img src='/static/shop/nothing.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+      </div>
+      <div class="carousel-item">
+       <img src='/static/shop/emptybag.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+      </div>
+    </div>
+   </div>
+   {% endif %}
+   </div>
+   {% else %}
+    <p class="alert alert-warning">Login is required to see orders here! Please <a style="color:#7f6600;" href="{% url 'login' %}">Login</a>.</p>
+   <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+       <img src='/static/shop/nothing.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+      </div>
+      <div class="carousel-item">
+       <img src='/static/shop/emptybag.jpg' alt='' srcset='' class='img-fluid' height='2px'>
+      </div>
+    </div>
+   </div>
+   {% endif %}
+  </div>
+ </div>
+</div>
+{% endblock body %}
+
+
+{% block js %}
+<script>
+
+</script>
+{% endblock %}

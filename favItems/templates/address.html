@@ -1,0 +1,92 @@
+{% extends 'basic.html' %}
+{% block title%} Address {% endblock %}
+{% block body %}
+
+<div class="container my-3">
+ {% if success %}
+  <p class="alert alert-success">Deleted successfully!</p>
+ {% elif error %}
+  <p class="alert alert-danger">Invalid input!</p>
+ {% endif %}
+<div class="row">
+<h3>Welcome! <b>{{request.user|capfirst}}</b></h3>
+<div class="col-sm-2 border-end">
+ <ul class="list-unstyled">
+  <li class="d-grid"><a href="{% url 'profile' %}" class="btn btn-secondary my-2">Profile</a></li>
+  <li class="d-grid"><a href="{% url 'address' %}" class="btn {{active}}">Address</a></li>
+ </ul>
+ </div>
+<div class="col-sm-9 offset-sm-1">
+ <hr>
+ <div class="row">
+  {% if add %}
+  {% for ad in add %}
+  <div class="col-sm-6 mb-2">
+   <div class="card addr" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    <div class="card-body">
+      <h6 style="font-size:14px;" class="text-center">Address {{forloop.counter}}</h6>
+      <h6 class="text-center"><b>{{ad.name}}</b></h6>
+      <p style="font-size:14px; color:grey;">{{ad.locality}},<br>
+      {{ad.city}},<br>
+      {{ad.state}} - 
+      {{ad.zipcode}}</p>
+    </div>
+   </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div>
+   <p class="alert alert-info">No adresses! Set up your profile and address to make placing order easy.</p>
+  </div>
+  {% endif %}
+ </div>
+   <div hidden class='mx-3 my-5' id="addBtn">
+    <input type='number' id='ano' class='form-control' placeholder='Enter the Address number'>
+   </div>
+   <div class='d-grid gap-2 col-8 my-3' style="width:100%;">
+     <button hidden id="addbtn" onclick='takeAdd()' type='submit' class='btn btn-danger'>Remove Address</button>
+   </div>
+   <div class="d-grid gap-2 col-8 my-3" style="width:100%;" id="rem">
+     <button onclick="remAdd()" type="submit" class="btn btn-danger">Remove Address</button>
+   </div>
+    <script>
+       function remAdd(){
+          document.getElementById("rem").addEventListener('click', function () {addBtn.hidden = !addBtn.hidden;addbtn.hidden = !addbtn.hidden;}, false);
+          //$('#addBtn').show();
+          //takeAdd = "<div class='mx-5'><input type='number' id='ano' class='form-control' placeholder='Enter the Address number'></div><div class='d-grid gap-2 col-8 my-3'><button onclick='takeAdd()' type='submit' class='btn btn-danger'>Remove Address</button></div>"
+          document.getElementById('rem').innerHTML = "";
+       }
+       function takeAdd(){
+          let adn = document.getElementById('ano').value;
+          $.ajax({
+             type:"GET",
+             url:"/remAddress",
+             data:{
+                add_no: adn,
+             },
+             success: function(data){
+                document.location.reload();
+                console.log(data)
+             }
+          });
+        }
+
+  </script>
+ </div>
+</div>
+</div>
+{% endblock body %}
+
+{% block js %}
+<script>
+/*
+{% if add %}
+$('#ano').hide();
+{% endif %}
+
+$(document).ready(function () {
+  $('#ano').hide();
+});
+*/
+</script>
+{% endblock js %}

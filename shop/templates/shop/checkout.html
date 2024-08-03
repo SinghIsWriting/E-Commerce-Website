@@ -1,0 +1,147 @@
+{% extends 'shop/basic1.2.html' %}
+
+{% block title%} Checkout{% endblock %}
+
+{% block css %}
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    gap: 30px;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
+    margin-top: 20px;
+}
+
+{% endblock %}
+
+{% block body%}
+
+<div class="container">
+    <div class="col my-4">
+    {% if thank %}
+      <p class="{{thank}}">All options are required! Please fill all the details properly.</p>
+    {% endif %}
+        <h4><b>Step 1 - Review Your Favorite Items</b>
+        <a style="font-size:20px; color:black;" href="/shop">
+            <abbr title="Add more items">
+            <i class="fa fa-plus-square-o" aria-hidden="true"></i></abbr></a></h4>
+        <div>
+            <ul class="list-group" id="items">
+            </ul>
+        </div>
+        <p><nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+           <li class="breadcrumb-item active" aria-current="page">Subtotal ₹<b><span id="totalPrice">0</span></b></li>
+          </ol>
+        </nav></p><hr>
+    </div>
+    <div class="col my-4">
+        <h4><b>Step 2 - Enter the details to place order</b></h4>
+        <form method="post" action="/shop/checkout/">{% csrf_token %}
+            <input type="hidden" id="itemsJson" name="itemsJson">
+            <input type="hidden" id="amount" name="amount">
+            <div class="form-row">
+                
+                <div class="col-sm-4 offset-sm-1 mt-2">
+                <h4><b>Choose Shipping Address</b></h4>
+                {% if add %}
+                {% for ad in add %}
+                <div class="card">
+                <div class="card-body text-center">
+                <h5 style='font-size:16px;'><b>{{ad.name}}</b></h5>
+                <p style='font-size:15px; color:grey;'>{{ad.locality}}, {{ad.city}}, {{ad.state}} - {{ad.zipcode}}</p>
+                </div>
+                </div>
+                <div class="form-check mt-2 mb-4">
+                <input type="radio" class="form-check-input" name="custid" id="custadd{{forloop.counter}}" value="{{ad.id}}">
+                <label class="form-check-label fw-bold babloo" for="custadd{{forloop.counter}}">Address: {{forloop.counter}}</label>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="alert alert-warning">No adresses! You have not set up your profile yet. Please do that before placing order. Visit your <a style="color:#7f6600;" href="{% url 'profile' %}">Profile</a></p>
+                {% endif %}
+            </div>
+            <div class="form-group col-md-4" style="margin-top: 18px;">
+                    <label for="inputEmail4"><h5 style='font-size:16px;'>Phone number</h5></label> 
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+
+                    <div class="d-grid gap-2 col-8 mx-auto">
+                        <button type="submit" style="background-color:orange; color:white;font-weight: 600; margin-top: 20px;" class="btn">Place Orders</button>
+                    </div>
+            </div>
+          </div>
+        </form>
+    </div>
+</div>
+
+ {% endblock %}
+
+
+{% block js%}
+<script>
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else if (localStorage.getItem('singleOrder') != null){
+    var myData = localStorage['singleOrder'];
+    //localStorage.removeItem( 'singleOrder' ); // Clear the localStorage
+    var pname = myData[0]['pname'];
+    var pprice = myData[0]['pprice'];
+    mystr = ` <li class="list-group-item d-flex justify-content-between align-items-center">
+               ${pname}
+              <span class="badge badge-dark">₹${pprice}   Quant - 1</span>
+           </li>`
+    $('#items').append(mystr);
+    document.getElementById('totalPrice').innerHTML = pprice;
+    localStorage.removeItem( 'singleOrder' );
+
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+}
+console.log(cart);
+var sum = 0;
+var totalPrice = 0;
+if ($.isEmptyObject(cart)) {
+    // If object is empty
+       //mystr = "<img src='/static/shop/empty_cart.jpeg' alt='' srcset='' class='img-fluid' height='2px'><p class='alert alert-warning'>
+//Your cart is empty, please add some items in your cart before checking out ! 
+//Visit the shop.</p><br><p><input type='button' value='Go to Shop' onclick='history.back()' class='btn btn-dark'></p>"
+      mystr = "<div id='carouselExampleSlidesOnly class='carousel slide' data-ride='carousel'><div class='carousel-inner'><div class='carousel-item px-3 active'><img src='/static/shop/yemptycart.png' alt='' srcset='' class='img-fluid' height='2px'></div><div class='carousel-item'><img src='/static/shop/empty_cart.jpeg' alt='' srcset='' class='img-fluid' height='2px'></div><div class='carousel-item'><img src='/static/shop/empty-cart-bear.png' alt='' srcset='' class='img-fluid' height='2px'></div></div></div><p class='alert alert-warning mt-3'>Your cart is empty, please add some items in your cart before checking out! Visit the shop.</p><br><p><input type='button' value='Go to Shop' onclick='history.back()' class='btn btn-dark'></p>"
+    $('#items').append(mystr);
+}
+
+for (item in cart) {
+
+    let name = cart[item][1];
+    let qty = cart[item][0];
+    let price = cart[item][2];
+    sum = sum + qty;
+    totalPrice = totalPrice + qty * price;
+    totalPrice1 = totalPrice
+    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                   ${name}
+                   <span class="badge badge-dark">₹${price}   Quant - ${qty}</span>
+                </li>`
+    $('#items').append(mystr);
+}
+
+//let dollarIndianLocale = Intl.NumberFormat('en-IN');
+//dollarIndianLocale.format(totalPrice);
+
+//document.getElementById('cart').innerHTML = sum;
+document.getElementById('totalPrice').innerHTML = totalPrice1;
+
+$('#itemsJson').val(JSON.stringify(cart));
+//{% if thanks %}
+//alert("Thanks for making a purchase with us. Your order id is {{id}}. Use it to track your order, please go to Tracker page")
+//localStorage.clear();
+//document.location="/shop/cartorders";
+//{% endif %}
+
+$('#amount').val($('#totalPrice').html())
+
+</script>
+{%endblock%}
